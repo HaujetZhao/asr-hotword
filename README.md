@@ -53,7 +53,7 @@ pc.update_hotwords(hotwords)
 
 result = pc.correct("用 caps riter offline 来打字")
 print(result.text)      # 用 CapsWriter-Offline 来打字
-print(result.matchs)    # [('caps riter offline', 'CapsWriter-Offline', 0.9411764705882353)] 
+print(result.matches)    # [('caps riter offline', 'CapsWriter-Offline', 0.9411764705882353)] 
 
 ```
 
@@ -164,7 +164,7 @@ result = pc.correct(text, k=10)  # 执行纠错，k=候选数量
 
 `CorrectionResult` 包含：
 - `.text` — 纠错后的文本
-- `.matchs` — `[(原始片段, 热词, 分数), ...]` 实际被替换的项
+- `.matches` — `[(原始片段, 热词, 分数), ...]` 实际被替换的项
 - `.similars` — `[(原始片段, 热词, 分数), ...]` 相似候选
 
 ## 热词文件格式

@@ -62,11 +62,11 @@ def test():
         else:
             print("  （无变化）")
 
-        for wrong, right, score in result.matchs:
+        for wrong, right, score in result.matches:
             print(f"        替换  {wrong} → {right}  ({score:.2f})")
 
         for origin, hw, score in result.similars:
-            if (origin, hw, score) not in result.matchs:
+            if (origin, hw, score) not in result.matches:
                 print(f"        候选  {origin} → {hw}  ({score:.2f})")
 
         print(f"        耗时  {t_ms:.1f}ms")
