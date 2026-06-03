@@ -14,7 +14,7 @@ from collections import defaultdict
 from pathlib import Path
 
 from .algo_phoneme import get_phoneme_info, Phoneme
-from .rag_fast_rf import FastRAG
+from .rag_fast_batch import FastRAG
 from .algo_calc import fuzzy_substring_search_constrained
 
 # 使用统一的 logger（从 __init__.py 导入）
@@ -230,8 +230,8 @@ class PhonemeCorrector:
 
 
 if __name__ == "__main__":
-    from core.logger import setup_logger
-    setup_logger('test', level='DEBUG')
+    # from core.logger import setup_logger
+    # setup_logger('test', level='DEBUG')
 
     print("\n--- PhonemeCorrector 测试 ---")
     corrector = PhonemeCorrector(threshold=0.7)
@@ -309,7 +309,7 @@ VsCode
     print("="*70)
 
     # 导入
-    from .rag_fast_rf import FastRAG
+    from .rag_fast_batch import FastRAG
     from .rag_accu import AccuRAG
     from .algo_phoneme import get_phoneme_info
 
