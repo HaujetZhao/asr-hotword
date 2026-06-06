@@ -10,7 +10,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 两层检索架构：
 
-1. **FastRAG**（粗筛）— 倒排索引 + 锚点扫描 + 编辑距离，快速过滤候选
+1. **FastRAG**（粗筛）— rapidfuzz C++ 批量匹配 + 掩码剥离多位置召回，快速过滤候选
 2. **AccuRAG**（精筛）— 模糊音权重编辑距离 + 字边界约束，精确匹配
 
 ### 模块职责
@@ -19,10 +19,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 |---|---|
 | `algo_phoneme.py` | 文本→音素序列转换，`Phoneme` 数据模型，pypinyin 封装 |
 | `algo_calc.py` | 相似度算法：LCS、音素编辑距离、相似音素集 |
-| `rag_fast.py` | 倒排索引 `PhonemeIndex` + 纯 Python DP 检索 |
+| `rag_fast.py` | `PhonemeEncoder` 编码器 + 纯 Python 倒排索引基线实现 |
 | `rag_fast_rf.py` | 与 `rag_fast.py` 同接口，用 rapidfuzz C++ 后端加速 |
+| `rag_fast_batch.py` | 全局批量版 FastRAG，用 `rapidfuzz.process.extract` 一次性粗筛 + 掩码剥离多处匹配 |
 | `rag_accu.py` | `AccuRAG` — 含模糊音权重的精确匹配 |
-| `hot_phoneme.py` | `PhonemeCorrector` — 编排 FastRAG+AccuRAG 的主纠错器 |
+| `hot_phoneme.py` | `PhonemeCorrector` — 编排 FastRAG+AccuRAG 的主纠错器（当前默认使用 `rag_fast_batch`） |
+| `benchmark.py` | 对比 `rag_fast_rf` 与 `rag_fast_batch` 的性能和结果一致性 |
+| `gen_test_data.py` | 生成随机热词和测试用例数据 |
 
 ### 音素模型
 
@@ -37,7 +40,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## 依赖
 
 - **必须**: `pypinyin` — 中文音素转换
-- **加速**: `rapidfuzz` — FastRAG-rf 变体需要
+- **必须**: `rapidfuzz` — FastRAG 默认后端（`rag_fast_batch`），C++ 加速
 
 ## 开发命令
 
@@ -50,8 +53,12 @@ python -m hotword.algo_phoneme
 python -m hotword.algo_calc
 python -m hotword.rag_fast
 python -m hotword.rag_fast_rf
+python -m hotword.rag_fast_batch
 python -m hotword.rag_accu
 python -m hotword.hot_phoneme
+
+# 性能对比（rag_fast_rf vs rag_fast_batch）
+python -m hotword.benchmark
 
 # 快速使用
 python -c "from hotword import PhonemeCorrector; c = PhonemeCorrector(); c.update_hotwords('CapsWriter'); print(c.correct('use caps riter to type'))"
