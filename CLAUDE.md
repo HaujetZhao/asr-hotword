@@ -35,7 +35,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### 热词文件格式
 
-- `hot.txt`：每行一个热词，支持 `|` 分隔别名（如 `Claude | Cloud`）
+- `hot.txt`：每行一个热词，支持 `|` 分隔别名（如 `Claude | Cloud`）。
+- **黑名单支持**：支持使用 `~~~` 声明邻近黑名单，例如 `傅平 ~~~ 工作 | 精准 | 脱贫`。在 `correct(text, blacklist_window=5)` 替换时，如果在被替换原词周围 `blacklist_window`（默认5个语义词，包含每个CJK汉字、英文单词或数字）内出现了黑名单中的词，则拦截该替换。
 
 ## 依赖
 
